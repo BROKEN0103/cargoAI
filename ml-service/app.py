@@ -53,7 +53,7 @@ THREAT_CATEGORIES = {
 
 def detect_packet_clusters(detections):
     """Detects clusters of rectangular packets (potential drugs)."""
-    packet_bboxes = [d["bbox"] for d in detections if "packet" in d["object"].lower() or "drug" in d["object"].lower()]
+    packet_bboxes = [d["bounding_box"] for d in detections if "packet" in d["object_name"].lower() or "drug" in d["object_name"].lower()]
     if len(packet_bboxes) < 3:
         return False, 0
     

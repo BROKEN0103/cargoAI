@@ -22,22 +22,24 @@ async function getDb() {
 
     CREATE TABLE IF NOT EXISTS cargo_scans (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      image_url TEXT NOT NULL,
-      risk_score INTEGER DEFAULT 0,
-      risk_level TEXT DEFAULT 'LOW',
-      risk_explanation TEXT,
+      filename TEXT,
       declared_cargo TEXT,
-      mismatch_found BOOLEAN DEFAULT FALSE,
+      risk_score INTEGER,
+      risk_level TEXT,
+      risk_explanation TEXT,
       vit_analysis TEXT,
+      anomaly_score REAL,
+      annotated_image_path TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS detections (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       scan_id INTEGER,
-      object_name TEXT NOT NULL,
-      confidence REAL NOT NULL,
-      threat_category TEXT DEFAULT 'UNKNOWN',
+      object_name TEXT,
+      confidence REAL,
+      bbox TEXT,
+      threat_category TEXT,
       threat_label TEXT,
       FOREIGN KEY(scan_id) REFERENCES cargo_scans(id) ON DELETE CASCADE
     );
