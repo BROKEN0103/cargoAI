@@ -97,6 +97,41 @@ export default function ResultDetail() {
           <p className="text-gray-300 italic">" {scan.risk_explanation} "</p>
         </div>
       )}
+      {/* ─── ANOMALY & RISK STATS ─── */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Anomaly Score</p>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-mono font-bold text-orange-400">
+              {(scan.anomaly_score * 100).toFixed(1)}%
+            </span>
+            <div className="flex-1 h-2 bg-gray-900 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-orange-500" 
+                style={{ width: `${scan.anomaly_score * 100}%` }}
+              />
+            </div>
+          </div>
+          <p className="text-[10px] text-gray-400 mt-2 italic">Structural irregularity detection via CNN feature extraction</p>
+        </div>
+        
+        <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Hotspot Activity</p>
+          <span className="text-2xl font-mono font-bold text-blue-400">
+            {detections.length} <span className="text-sm text-gray-500 font-normal">Identified Signatures</span>
+          </span>
+        </div>
+      </div>
+
+      <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
+        <div className="flex items-center gap-2 mb-4">
+          <FileText size={18} className="text-blue-400" />
+          <h3 className="font-bold text-gray-200">AI Risk Briefing</h3>
+        </div>
+        <p className="text-gray-400 text-sm leading-relaxed font-light">
+          {scan.explanation}
+        </p>
+      </div>
 
       {/* ─── DUAL MODEL VIEW: YOLO + ViT ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

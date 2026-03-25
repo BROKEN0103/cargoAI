@@ -42,14 +42,14 @@
 
 | Feature | Description |
 |:---|:---|
-| **Object Detection** | YOLOv8 detects and localizes cargo objects with bounding boxes |
-| **Threat Classification** | Maps COCO classes to 10 specific threat categories (Weapons, Firearms, Drugs, Human Presence, etc.) |
-| **Shape-Based Analysis** | Detects firearm-like silhouettes (L-shaped elongated objects) that YOLO may miss |
-| **Smuggling Pattern Detection** | ViT attention maps detect hidden layering, density clusters, concealment |
-| **Cargo Mismatch Detection** | Intelligent comparison between 6+ declared categories vs detected threat classes |
-| **Risk Scoring** | Composite 0–100 score combining YOLO, ViT, and Mismatch alerts |
-| **Heatmap Visualization** | YOLO overlay + ViT INFERNO attention heatmap side-by-side |
-| **AI Briefing** | Natural language explanation of all findings |
+| **Specialized Detection** | Dedicated `/detect-cargo` API for identified threat classes |
+| **Drug Packet Analysis** | Spatial cluster detection for rectangular drug-like packets |
+| **Alcohol Identification** | Bottle-shape detection logic with shipment-specific risk weighting |
+| **Firearm Detection** | Automatic high-risk (60 pts) override for identified weapons |
+| **Anomaly Detection** | CNN-based (ResNet) feature extraction for structural irregularities |
+| **Training Pipeline** | `train.py` script for YOLOv8s automation on custom cargo datasets |
+| **Risk Scoring Engine** | Composite 0-100 score with detailed point breakdown in the AI Briefing |
+| **Visual Evidence** | Annotated X-ray output with structural density heatmaps |
 | **Image Preprocessing** | CLAHE contrast enhancement for X-ray clarity |
 | **Admin Authentication** | Secure login with session management |
 | **Scan History & Dashboard** | Full audit trail with statistics |

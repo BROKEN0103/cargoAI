@@ -48,42 +48,32 @@ app.post('/api/scan-cargo', upload.single('image'), async (req, res) => {
 
   try {
     const db = await getDb();
-    // 1. Send image to ML service
-    const formData = new FormData();
-    formData.append('file', fs.createReadStream(req.file.path), req.file.filename);
-    formData.append('declared_cargo', declared_cargo || '');
+    // 2. Call ML Service
+    const mlFormData = new FormData();
+    mlFormData.append('file', fs.createReadStream(req.file.path));
+    mlFormData.append('declared_cargo', declared_cargo);
 
-    const mlResponse = await axios.post('http://127.0.0.1:8000/detect', formData, {
-        headers: {
-            ...formData.getHeaders()
-        }
+    const mlRes = await axios.post('http://localhost:8000/detect-cargo', mlFormData, {
+      headers: { ...mlFormData.getHeaders() }
     });
 
-    const { detections, risk_score, risk_level, explanation, mismatch_found, vit_analysis } = mlResponse.data;
+    const { detections, risk_score, risk_level, explanation, vit_analysis, anomaly_score, annotated_path } = mlRes.data;
 
-    // 2. Store results in DB
-    const insertScanQuery = `
-      INSERT INTO cargo_scans (image_url, risk_score, risk_level, risk_explanation, declared_cargo, mismatch_found, vit_analysis)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    const scanResult = await db.run(insertScanQuery, [
-      req.file.filename, 
-      risk_score, 
-      risk_level, 
-      explanation, 
-      declared_cargo, 
-      mismatch_found ? 1 : 0,
-      JSON.stringify(vit_analysis || {})
-    ]);
-    const scanId = scanResult.lastID;
+    // 3. Store Results in DB
+    const insertScanResult = await db.run(
+      `INSERT INTO cargo_scans (filename, declared_cargo, risk_score, risk_level, risk_explanation, vit_analysis, anomaly_score, annotated_image_path) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [req.file.filename, declared_cargo, risk_score, risk_level, explanation, JSON.stringify(vit_analysis), anomaly_score, annotated_path]
+    );
+    const scanId = insertScanResult.lastID;
 
-    // Insert detections
     if (detections && detections.length > 0) {
-      for (const d of detections) {
-         await db.run(
-           'INSERT INTO detections (scan_id, object_name, confidence, threat_category, threat_label) VALUES (?, ?, ?, ?, ?)',
-           [scanId, d.object, d.confidence, d.threat_category || 'UNKNOWN', d.threat_label || d.object]
-         );
+      for (const det of detections) {
+        await db.run(
+          `INSERT INTO detections (scan_id, object_name, confidence, bbox, threat_category, threat_label) 
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [scanId, det.object_name, det.confidence, JSON.stringify(det.bounding_box), det.threat_category || 'UNKNOWN', det.threat_label || det.object_name]
+        );
       }
     }
 

@@ -1,0 +1,14 @@
+# Cargo Threat Detection Dataset
+# Path relative to the training script or absolute
+path: datasets/cargo_dataset
+train: images/train
+val: images/val
+
+# Classes
+names:
+  0: drug_packet
+  1: alcohol_bottle
+  2: firearm
+  3: weapon
+  4: metal_cluster
+  5: suspicious_object
