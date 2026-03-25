@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Database
+*.db
+
+# ML model weights (large files)
+*.pt
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Storage (uploaded images)
+storage/uploads/*
+!storage/uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
