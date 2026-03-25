@@ -84,7 +84,20 @@ export default function Home() {
                </div>
             </div>
             <div className="relative rounded-lg overflow-hidden border border-gray-700 bg-gray-900 aspect-video flex items-center justify-center">
-              <img src={preview} alt="Upload preview" className="max-h-full max-w-full object-contain" />
+              <img src={preview} alt="Upload preview" className="max-h-full max-w-full object-contain transition-all duration-700" style={{ filter: isScanning ? 'brightness(0.5) blur(2px)' : 'none' }} />
+              
+              {isScanning && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+                    <div className="w-full h-1 bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)] absolute top-0 animate-scan" />
+                    <div className="bg-gray-900/80 backdrop-blur-md border border-blue-500/30 px-6 py-4 rounded-2xl flex flex-col items-center gap-3 shadow-2xl">
+                        <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+                        <div className="text-center">
+                            <p className="text-blue-400 font-black uppercase tracking-[0.2em] text-[10px] mb-1">Deep Neural Analysis</p>
+                            <p className="text-white font-bold text-sm animate-pulse">Running YOLOv8 + ViT-B/16...</p>
+                        </div>
+                    </div>
+                </div>
+              )}
             </div>
             
             <div className="flex justify-between items-center bg-gray-900 p-4 rounded-lg border border-gray-700">
@@ -93,8 +106,9 @@ export default function Home() {
                 <span className="font-mono text-sm text-gray-300">{file.name}</span>
               </div>
               <button 
-                onClick={() => { setFile(null); setPreview(null); }}
-                className="text-sm text-red-400 hover:text-red-300"
+                onClick={() => { if(!isScanning) { setFile(null); setPreview(null); } }}
+                disabled={isScanning}
+                className={`text-sm ${isScanning ? 'text-gray-600' : 'text-red-400 hover:text-red-300'}`}
               >
                 Remove
               </button>
@@ -112,11 +126,11 @@ export default function Home() {
               disabled={isScanning}
               className={`w-full py-4 rounded-lg font-bold text-lg tracking-wide uppercase transition-all ${
                 isScanning 
-                  ? 'bg-blue-600/50 text-white cursor-not-allowed animate-pulse' 
+                  ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30 cursor-wait' 
                   : 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]'
               }`}
             >
-              {isScanning ? 'Processing AI Models...' : 'Run Intelligence Scan'}
+              {isScanning ? 'Analyzing Intelligence...' : 'Run Intelligence Scan'}
             </button>
           </div>
         )}

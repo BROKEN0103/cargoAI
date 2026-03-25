@@ -29,6 +29,8 @@ frontend/out/
 # Storage (uploaded images)
 storage/uploads/*
 !storage/uploads/.gitkeep
+storage/annotated_results/*
+!storage/annotated_results/.gitkeep
 
 # Logs
 *.log
