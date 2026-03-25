@@ -43,10 +43,11 @@
 | Feature | Description |
 |:---|:---|
 | **Object Detection** | YOLOv8 detects and localizes cargo objects with bounding boxes |
-| **Object Classification** | Items classified as Normal, Suspicious, or Prohibited |
+| **Threat Classification** | Maps COCO classes to 10 specific threat categories (Weapons, Firearms, Drugs, Human Presence, etc.) |
+| **Shape-Based Analysis** | Detects firearm-like silhouettes (L-shaped elongated objects) that YOLO may miss |
 | **Smuggling Pattern Detection** | ViT attention maps detect hidden layering, density clusters, concealment |
-| **Cargo Mismatch Detection** | Compares declared cargo type vs detected objects |
-| **Risk Scoring** | Composite 0–100 score combining both models |
+| **Cargo Mismatch Detection** | Intelligent comparison between 6+ declared categories vs detected threat classes |
+| **Risk Scoring** | Composite 0–100 score combining YOLO, ViT, and Mismatch alerts |
 | **Heatmap Visualization** | YOLO overlay + ViT INFERNO attention heatmap side-by-side |
 | **AI Briefing** | Natural language explanation of all findings |
 | **Image Preprocessing** | CLAHE contrast enhancement for X-ray clarity |
@@ -193,7 +194,7 @@ The results page shows:
 
 ---
 
-## 👥 Team
+## 👥 Team 
 
 Built for hackathon demonstration of AI-powered cargo intelligence.
 

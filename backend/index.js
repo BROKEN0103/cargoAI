@@ -81,8 +81,8 @@ app.post('/api/scan-cargo', upload.single('image'), async (req, res) => {
     if (detections && detections.length > 0) {
       for (const d of detections) {
          await db.run(
-           'INSERT INTO detections (scan_id, object_name, confidence) VALUES (?, ?, ?)',
-           [scanId, d.object, d.confidence]
+           'INSERT INTO detections (scan_id, object_name, confidence, threat_category, threat_label) VALUES (?, ?, ?, ?, ?)',
+           [scanId, d.object, d.confidence, d.threat_category || 'UNKNOWN', d.threat_label || d.object]
          );
       }
     }

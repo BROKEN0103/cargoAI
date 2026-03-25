@@ -37,6 +37,8 @@ async function getDb() {
       scan_id INTEGER,
       object_name TEXT NOT NULL,
       confidence REAL NOT NULL,
+      threat_category TEXT DEFAULT 'UNKNOWN',
+      threat_label TEXT,
       FOREIGN KEY(scan_id) REFERENCES cargo_scans(id) ON DELETE CASCADE
     );
 

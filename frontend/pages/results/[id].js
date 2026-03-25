@@ -203,7 +203,7 @@ export default function ResultDetail() {
       <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden">
         <div className="p-4 border-b border-gray-700 flex items-center gap-2 bg-gray-900/50">
           <Database size={18} className="text-blue-400" />
-          <span className="font-semibold tracking-wide text-sm text-gray-300">IDENTIFIED SIGNATURES</span>
+          <span className="font-semibold tracking-wide text-sm text-gray-300">IDENTIFIED THREAT SIGNATURES</span>
         </div>
         
         <div className="p-0 overflow-auto max-h-[500px]">
@@ -211,31 +211,53 @@ export default function ResultDetail() {
             <table className="w-full text-left">
               <thead className="bg-gray-900 sticky top-0 border-b border-gray-700 z-10">
                 <tr>
-                  <th className="p-4 text-xs font-medium text-gray-400 uppercase tracking-widest">Classification</th>
+                  <th className="p-4 text-xs font-medium text-gray-400 uppercase tracking-widest">Object</th>
+                  <th className="p-4 text-xs font-medium text-gray-400 uppercase tracking-widest">Threat Class</th>
                   <th className="p-4 text-xs font-medium text-gray-400 uppercase tracking-widest text-right">Confidence</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700/50">
-                {detections.map(d => (
-                  <tr key={d.id} className="hover:bg-gray-750">
-                    <td className="p-4 font-mono font-medium text-gray-200 capitalize">
-                      {d.object_name}
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-3">
-                        <div className="w-24 h-1.5 bg-gray-900 rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full rounded-full ${d.confidence > 0.7 ? 'bg-green-500' : d.confidence > 0.4 ? 'bg-yellow-500' : 'bg-red-500'}`} 
-                            style={{ width: `${d.confidence * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-xs font-mono w-8 text-gray-400">
-                          {(d.confidence * 100).toFixed(0)}%
+                {detections.map(d => {
+                  const cat = d.threat_category || 'UNKNOWN';
+                  const catColors = {
+                    WEAPON: 'bg-red-500/20 text-red-400 border-red-500/30',
+                    FIREARM: 'bg-red-700/20 text-red-300 border-red-700/30',
+                    ALCOHOL: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+                    DRUGS_PARAPHERNALIA: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+                    ELECTRONICS: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+                    CONCEALMENT: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+                    HUMAN_INDICATOR: 'bg-red-600/20 text-red-300 border-red-600/30',
+                    ANIMAL: 'bg-green-500/20 text-green-400 border-green-500/30',
+                    ORGANIC: 'bg-lime-500/20 text-lime-400 border-lime-500/30',
+                    VEHICLE: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+                    UNKNOWN: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
+                  };
+                  return (
+                    <tr key={d.id} className="hover:bg-gray-750">
+                      <td className="p-4 font-mono font-medium text-gray-200 capitalize">
+                        {d.object_name}
+                      </td>
+                      <td className="p-4">
+                        <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border ${catColors[cat] || catColors.UNKNOWN}`}>
+                          {d.threat_label || cat}
                         </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-3">
+                          <div className="w-24 h-1.5 bg-gray-900 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full ${d.confidence > 0.7 ? 'bg-green-500' : d.confidence > 0.4 ? 'bg-yellow-500' : 'bg-red-500'}`} 
+                              style={{ width: `${d.confidence * 100}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-mono w-8 text-gray-400">
+                            {(d.confidence * 100).toFixed(0)}%
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           ) : (
